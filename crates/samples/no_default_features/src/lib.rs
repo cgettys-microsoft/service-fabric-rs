@@ -10,11 +10,17 @@
 //!
 //! This sample demonstrates it is possible to use the library with default-features = false and ensures that that scenario remains compiling as PRs go into the repository.
 //!
-use mssf_core::runtime::CodePackageActivationContext;
+use mssf_core::{
+    client::{FabricClient, FabricClientBuilder},
+    runtime::CodePackageActivationContext,
+};
 #[no_mangle]
 fn test_fn() {
     // Make sure we link something
     //
     let my_ctx = CodePackageActivationContext::create();
     my_ctx.unwrap();
+
+    let my_client_builder = FabricClient::builder();
+    let _my_client = FabricClientBuilder::build(my_client_builder);
 }

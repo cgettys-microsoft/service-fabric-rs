@@ -3,13 +3,16 @@
 // Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
 
+use mssf_com::FabricClient::IFabricQueryClient10;
+
+#[cfg(feature = "tokio_async")]
 use std::{ffi::c_void, time::Duration};
 
+#[cfg(feature = "tokio_async")]
 use mssf_com::{
     FabricClient::{
         IFabricGetNodeListResult2, IFabricGetPartitionListResult2,
         IFabricGetPartitionLoadInformationResult, IFabricGetReplicaListResult2,
-        IFabricQueryClient10,
     },
     FabricTypes::{
         FABRIC_NODE_QUERY_DESCRIPTION, FABRIC_NODE_QUERY_DESCRIPTION_EX1,
@@ -19,6 +22,7 @@ use mssf_com::{
     },
 };
 
+#[cfg(feature = "tokio_async")]
 use crate::{
     strings::get_pcwstr_from_opt,
     sync::{fabric_begin_end_proxy2, CancellationToken, FabricReceiver2},
@@ -38,6 +42,7 @@ pub struct QueryClient {
 // Internal functions focuses on changing SF callback to async future,
 // while the public apis impl focuses on type conversion.
 impl QueryClient {
+    #[cfg(feature = "tokio_async")]
     pub fn get_node_list_internal(
         &self,
         query_description: &FABRIC_NODE_QUERY_DESCRIPTION,
@@ -56,6 +61,7 @@ impl QueryClient {
         )
     }
 
+    #[cfg(feature = "tokio_async")]
     fn get_partition_list_internal(
         &self,
         desc: &FABRIC_SERVICE_PARTITION_QUERY_DESCRIPTION,
@@ -73,6 +79,7 @@ impl QueryClient {
         )
     }
 
+    #[cfg(feature = "tokio_async")]
     fn get_replica_list_internal(
         &self,
         desc: &FABRIC_SERVICE_REPLICA_QUERY_DESCRIPTION,
@@ -90,6 +97,7 @@ impl QueryClient {
         )
     }
 
+    #[cfg(feature = "tokio_async")]
     fn get_partition_load_information_internal(
         &self,
         desc: &FABRIC_PARTITION_LOAD_INFORMATION_QUERY_DESCRIPTION,
@@ -113,6 +121,7 @@ impl QueryClient {
         Self { com: com.clone() }
     }
 
+    #[cfg(feature = "tokio_async")]
     // List nodes in the cluster
     pub async fn get_node_list(
         &self,
@@ -152,6 +161,8 @@ impl QueryClient {
         Ok(NodeList::from_com(com))
     }
 
+    
+    #[cfg(feature = "tokio_async")]
     pub async fn get_partition_list(
         &self,
         desc: &ServicePartitionQueryDescription,
@@ -167,6 +178,7 @@ impl QueryClient {
         Ok(ServicePartitionList::new(com))
     }
 
+    #[cfg(feature = "tokio_async")]
     pub async fn get_replica_list(
         &self,
         desc: &ServiceReplicaQueryDescription,
@@ -182,6 +194,7 @@ impl QueryClient {
         Ok(ServiceReplicaList::new(com))
     }
 
+    #[cfg(feature = "tokio_async")]
     pub async fn get_partition_load_information(
         &self,
         desc: &PartitionLoadInformationQueryDescription,
