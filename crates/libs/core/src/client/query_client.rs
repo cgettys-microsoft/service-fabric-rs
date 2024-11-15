@@ -34,6 +34,7 @@ use crate::{
 };
 
 #[derive(Debug, Clone)]
+#[cfg_attr(not(feature = "tokio_async"), allow(dead_code))]
 pub struct QueryClient {
     com: IFabricQueryClient10,
 }

@@ -27,16 +27,16 @@ use windows_core::{HSTRING, PCWSTR};
 
 
 #[cfg(feature = "tokio_async")]
-use crate::sync::{fabric_begin_end_proxy2, CancellationToken, FabricReceiver2};
-use crate::{
-    iter::{FabricIter, FabricListAccessor},
-    types::{
-        RemoveReplicaDescription, RestartReplicaDescription, ServiceNotificationFilterDescription,
-    },
+use crate::{sync::{fabric_begin_end_proxy2, CancellationToken, FabricReceiver2},
+types::{
+    RemoveReplicaDescription, RestartReplicaDescription, ServiceNotificationFilterDescription,
+}
 };
+use crate::iter::{FabricIter, FabricListAccessor};
 
 // Service Management Client
 #[derive(Debug, Clone)]
+#[cfg_attr(not(feature = "tokio_async"), allow(dead_code))]
 pub struct ServiceManagementClient {
     com: IFabricServiceManagementClient6,
 }
@@ -271,6 +271,7 @@ impl ServiceManagementClient {
 }
 
 // Handle to the registered service notification filter
+#[cfg_attr(not(feature = "tokio_async"), allow(dead_code))]
 pub struct FilterIdHandle {
     id: i64,
 }
@@ -317,6 +318,7 @@ impl From<&PartitionKeyType> for FABRIC_PARTITION_KEY_TYPE {
 
 impl PartitionKeyType {
     // get raw ptr to pass in com api
+    #[cfg_attr(not(feature = "tokio_async"), allow(dead_code))]
     fn get_raw_opt(&self) -> Option<*const c_void> {
         match self {
             // Not sure if this is ok for i64
@@ -373,7 +375,7 @@ pub struct ResolvedServicePartition {
 }
 
 impl ResolvedServicePartition {
-    #[cfg(feature = "tokio_async")]
+    #[cfg_attr(not(feature = "tokio_async"), allow(dead_code))]
     fn from_com(com: IFabricResolvedServicePartitionResult) -> Self {
         Self { com }
     }
