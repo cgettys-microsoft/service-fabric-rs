@@ -8,9 +8,9 @@ use mssf_com::FabricClient::IFabricClientSettings2;
 use std::{ffi::c_void, num::NonZeroU32, ptr};
 
 use mssf_com::FabricTypes::{
-        FABRIC_CLIENT_SETTINGS, FABRIC_CLIENT_SETTINGS_EX1, FABRIC_CLIENT_SETTINGS_EX2,
-        FABRIC_CLIENT_SETTINGS_EX3, FABRIC_CLIENT_SETTINGS_EX4,
-    };
+    FABRIC_CLIENT_SETTINGS, FABRIC_CLIENT_SETTINGS_EX1, FABRIC_CLIENT_SETTINGS_EX2,
+    FABRIC_CLIENT_SETTINGS_EX3, FABRIC_CLIENT_SETTINGS_EX4,
+};
 use windows_core::{WString, PCWSTR};
 
 use crate::strings::WStringWrap;
@@ -57,7 +57,6 @@ pub struct FabricClientSettings {
     pub NotificationCacheUpdateTimeoutInSeconds: Option<NonZeroU32>,
     // FABRIC_CLIENT_SETTINGS_EX3
     pub AuthTokenBufferSize: Option<u32>,
-
     // FABRIC_CLIENT_SETTINGS_EX4
     // Note: ConnectionIdleTimeoutInSeconds is deprecated and must be 0, so we don't expose it.
 
@@ -77,13 +76,13 @@ impl FabricClientSettings {
     where
         F: FnOnce(&Current) -> *mut core::ffi::c_void,
     {
-        let reserved: *mut core::ffi::c_void = accessor(&val);
+        let reserved: *mut core::ffi::c_void = accessor(val);
         // SAFETY: caller promises that the *mut c_void returned by accessor, if non-null, is actually a *mut Next
         let next_ptr: *mut Next = unsafe { std::mem::transmute(reserved) };
         // Even FABRIC_CLIENT_SETTINGS_EX5 is from 2020 (so 5 years old). If it's null, fatal error
         assert!(!next_ptr.is_null() && next_ptr.is_aligned());
         // SAFETY: pointer is valid and deferencable (null checked and alignment checked above)
-        let next: &Next = unsafe { std::mem::transmute(next_ptr) };
+        let next: &Next = unsafe { &*next_ptr };
         next
     }
 }
@@ -173,7 +172,7 @@ impl FabricClientSettings {
             let ptr = unsafe { result.get_Settings() };
             assert!(!ptr.is_null() && ptr.is_aligned());
             // SAFETY: both preconditions are asserted above
-            let my_ref: &FABRIC_CLIENT_SETTINGS = unsafe { std::mem::transmute(ptr) };
+            let my_ref: &FABRIC_CLIENT_SETTINGS = unsafe { &*ptr };
             FabricClientSettings::from(my_ref)
         };
         drop(result);
