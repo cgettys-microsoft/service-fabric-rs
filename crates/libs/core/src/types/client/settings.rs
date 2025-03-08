@@ -7,13 +7,10 @@ use mssf_com::FabricClient::IFabricClientSettings2;
 
 use std::{ffi::c_void, num::NonZeroU32, ptr};
 
-use mssf_com::{
-    FabricClient::IFabricClientSettings2,
-    FabricTypes::{
+use mssf_com::FabricTypes::{
         FABRIC_CLIENT_SETTINGS, FABRIC_CLIENT_SETTINGS_EX1, FABRIC_CLIENT_SETTINGS_EX2,
         FABRIC_CLIENT_SETTINGS_EX3, FABRIC_CLIENT_SETTINGS_EX4,
-    },
-};
+    };
 use windows_core::{WString, PCWSTR};
 
 use crate::strings::WStringWrap;
@@ -66,8 +63,8 @@ pub struct FabricClientSettings {
 
     //  TODO: we're missing FABRIC_CLIENT_SETTINGS_EX5 struct definition
     // FABRIC_CLIENT_SETTINGS_EX5
-    pub AllowHealthReportCleanup: Option<bool>,
-    pub HealthReportDropTransientReportTtlThresholdInSeconds: Option<u32>,
+    // pub AllowHealthReportCleanup: Option<bool>,
+    // pub HealthReportDropTransientReportTtlThresholdInSeconds: Option<u32>,
 }
 
 impl FabricClientSettings {
@@ -157,8 +154,8 @@ impl From<&FABRIC_CLIENT_SETTINGS> for FabricClientSettings {
             // FABRIC_CLIENT_SETTINGS_EX4 only has a deprecated setting
             // FABRIC_CLIENT_SETTINGS_EX5
             // TODO: waiting on IDL update
-            AllowHealthReportCleanup: None,
-            HealthReportDropTransientReportTtlThresholdInSeconds: None,
+            // AllowHealthReportCleanup: None,
+            // HealthReportDropTransientReportTtlThresholdInSeconds: None,
         }
     }
 }
@@ -268,16 +265,16 @@ fn combine_settings_with_overrides(
             overlay_client_settings,
             AuthTokenBufferSize
         ),
-        AllowHealthReportCleanup: Merge!(
-            base_client_settings,
-            overlay_client_settings,
-            AllowHealthReportCleanup
-        ),
-        HealthReportDropTransientReportTtlThresholdInSeconds: Merge!(
-            base_client_settings,
-            overlay_client_settings,
-            HealthReportDropTransientReportTtlThresholdInSeconds
-        ),
+        // AllowHealthReportCleanup: Merge!(
+        //     base_client_settings,
+        //     overlay_client_settings,
+        //     AllowHealthReportCleanup
+        // ),
+        // HealthReportDropTransientReportTtlThresholdInSeconds: Merge!(
+        //     base_client_settings,
+        //     overlay_client_settings,
+        //     HealthReportDropTransientReportTtlThresholdInSeconds
+        // ),
     }
 }
 
